@@ -42,6 +42,9 @@ class CBPGetActivityFromEntity
 		return $arErrors;
 	}
 
+	// Статический метод возвращает HTML-код диалога настройки
+	// свойств действия в визуальном редакторе. Если действие не имеет
+	// свойств, то этот метод не нужен
 	public static function GetPropertiesDialog($documentType, $activityName, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arCurrentValues = null, $formName = "", $popupWindow = null)
 	{
 
@@ -58,6 +61,8 @@ class CBPGetActivityFromEntity
 		if (!is_array($arWorkflowVariables))
 			$arWorkflowVariables = array();
 
+		// Если диалог открывается первый раз, то подгружаем значение
+		// свойства, которое было сохранено в шаблоне бизнес-процесса
 		if (!is_array($arCurrentValues)) {
 			$arCurrentValues = array();
 			$arCurrentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
@@ -80,7 +85,9 @@ class CBPGetActivityFromEntity
 		$arFieldTypes = $documentService->GetDocumentFieldTypes($documentType);
 		$arDocumentFields = $documentService->GetDocumentFields($documentType);
 
-
+		// Код, формирующий диалог, расположен в отдельном файле
+		// properties_dialog.php в папке действия.
+		// Возвращаем этот код.
 		return $runtime->ExecuteResourceFile(
 			__FILE__,
 			"properties_dialog.php",
@@ -96,6 +103,9 @@ class CBPGetActivityFromEntity
 
 	}
 
+	// Статический метод получает введенные в диалоге настройки свойств
+	// значения и сохраняет их в шаблоне бизнес-процесса. Если действие не
+	// имеет свойств, то этот метод не нужен.
 	public static function GetPropertiesDialogValues($documentType, $activityName, &$arWorkflowTemplate, &$arWorkflowParameters, &$arWorkflowVariables, $arCurrentValues, &$arErrors)
 	{
 		$arErrors = array();
